@@ -1,0 +1,7 @@
+irods_setup_script: "/var/lib/irods/scripts/setup_irods.py"
+database_password: "test"
+database_salt: "salt"
+zone_key: 1
+negotiation_key: "12345678901234567890123456789012"
+control_plane_key: "1234567890123456789012345678901b"
+admin_password: "admin"

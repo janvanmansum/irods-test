@@ -1,0 +1,59 @@
+- name: Install some requirements
+  yum:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - python-psycopg2
+    - epel-release
+    - expect
+    - unzip
+
+- name: Create ICAT db
+  become: yes
+  become_user: postgres
+  become_method: sudo
+  postgresql_db:
+    name: "ICAT"
+
+- name: Create irods user
+  become: yes
+  become_user: postgres
+  become_method: sudo
+  postgresql_user:
+    db: "ICAT"
+    name: "irods"
+    password: "{{ database_password }}"
+    priv: "ALL"
+
+- name: Import iRODS repo public key
+  command: rpm --import https://packages.irods.org/irods-signing-key.asc
+
+- name: Add iRODS yum repo
+  get_url:
+    url: "https://packages.irods.org/renci-irods.yum.repo"
+    dest: "/etc/yum.repos.d/renci-irods.yum.repo"
+
+- name: Make sure the public key is downloaded
+  command: "yum -y check-update"
+  ignore_errors: yes
+
+- name: Install iRODS packages
+  yum:
+    name: "{{ item }}"
+  with_items:
+    - irods-server
+    - irods-database-plugin-postgres
+
+- name: Copy setup response script to server
+  template:
+    src: setup.tcl
+    dest: "/home/vagrant"
+    mode: "u+x"
+
+- name: Run setup
+  command: "/home/vagrant/setup.tcl"
+
+- name: Download example files
+  get_url:
+    url: "ftp://ftp.renci.org/pub/irods/training/training_jpgs.zip"
+    dest: "/home/vagrant"
