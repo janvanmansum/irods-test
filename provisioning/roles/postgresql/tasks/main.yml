@@ -1,16 +1,16 @@
 - name: Install PostGreSQL
   yum:
     name: postgresql-server
-  
+
 - name: Check if PostGreSQL database has been initialized
   stat:
     path: /var/lib/pgsql/data/pg_log
   register: pg_log
-  
+
 - name: Initialize PostGreSQL database
   command: service postgresql initdb
   when: not (pg_log.stat.exists|bool)
-  
+
 - name: Turn on PostGreSQL auto vacuum 1/2
   lineinfile:
     dest: /var/lib/pgsql/data/postgresql.conf

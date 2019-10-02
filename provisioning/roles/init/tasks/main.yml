@@ -1,0 +1,15 @@
+- name: Map hostname to 127.0.0.1
+  lineinfile:
+    path: /etc/hosts
+    line: '127.0.0.1  test.dans.knaw.nl'
+
+- name: Some useful software
+  yum:
+    name:
+      - tree
+      - tmux
+      - mlocate
+
+- name: Init locate db
+  command: updatedb
+

@@ -1,10 +1,10 @@
 - name: Install some requirements
   yum:
     name:
-    - python-psycopg2
-    - epel-release
-    - expect
-    - unzip
+      - python-psycopg2
+      - epel-release
+      - expect
+      - unzip
 
 - name: Copy ICAT db creation script
   template:
@@ -31,8 +31,8 @@
 - name: Install iRODS packages
   yum:
     name:
-    - irods-server
-    - irods-database-plugin-postgres
+      - irods-server
+      - irods-database-plugin-postgres
 
 - name: Copy setup response script to server
   template:
