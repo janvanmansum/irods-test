@@ -1,29 +1,20 @@
 - name: Install some requirements
   yum:
-    name: "{{ item }}"
-    state: installed
-  with_items:
+    name:
     - python-psycopg2
     - epel-release
     - expect
     - unzip
 
-- name: Create ICAT db
-  become: yes
-  become_user: postgres
-  become_method: sudo
-  postgresql_db:
-    name: "ICAT"
+- name: Copy ICAT db creation script
+  template:
+    src: icat.sql
+    dest: "/tmp"
 
-- name: Create irods user
-  become: yes
-  become_user: postgres
-  become_method: sudo
-  postgresql_user:
-    db: "ICAT"
-    name: "irods"
-    password: "{{ database_password }}"
-    priv: "ALL"
+- name: Create ICAT db and user
+  shell: sudo -u postgres psql < icat.sql
+  args:
+    chdir: /tmp
 
 - name: Import iRODS repo public key
   command: rpm --import https://packages.irods.org/irods-signing-key.asc
@@ -39,8 +30,7 @@
 
 - name: Install iRODS packages
   yum:
-    name: "{{ item }}"
-  with_items:
+    name:
     - irods-server
     - irods-database-plugin-postgres
 
