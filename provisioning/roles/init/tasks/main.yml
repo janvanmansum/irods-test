@@ -13,3 +13,9 @@
 - name: Init locate db
   command: updatedb
 
+- name: Create users for tutorial
+  user:
+    name: '{{ item }}'
+  with_items:
+    - alice
+    - bob

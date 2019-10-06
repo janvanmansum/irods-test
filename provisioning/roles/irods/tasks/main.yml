@@ -2,6 +2,7 @@
   yum:
     name:
       - python-psycopg2
+      - python-exif
       - epel-release
       - expect
       - unzip
@@ -33,6 +34,7 @@
     name:
       - irods-server
       - irods-database-plugin-postgres
+      - irods-rule-engine-plugin-python
 
 - name: Copy setup response script to server
   template:
